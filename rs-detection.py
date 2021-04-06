@@ -13,7 +13,7 @@ device_product_line = str(device.get_info(rs.camera_info.product_line))
 
 w_max = 1280
 h_max = 720
-fps = 6
+fps = 30
 
 config.enable_stream(rs.stream.depth, w_max, h_max, rs.format.z16, fps)
 config.enable_stream(rs.stream.color, w_max, h_max, rs.format.bgr8, fps)
@@ -62,7 +62,7 @@ try:
         red_mask = cv2.dilate(red_mask, kernel)
         res_red = cv2.bitwise_and(color_image, color_image, 
                                   mask = red_mask)
-        contours, hierarchy = cv2.findContours(red_mask,
+        _, contours, hierarchy = cv2.findContours(red_mask,
                                                cv2.RETR_TREE,
                                                cv2.CHAIN_APPROX_SIMPLE)
     
@@ -100,7 +100,7 @@ try:
 
             lx = (x + w / 2) - (w_max / 2)
             ly1 = y - (h_max / 2)
-            ly2 = (y + h) - (w_max / 2)
+            ly2 = ly1 + h
             tan_angle_radian_x = math.tan((fov_x / 2) * (math.pi / 180))
             tan_angle_radian_y = math.tan((fov_y / 2) * (math.pi / 180))
 
@@ -110,12 +110,14 @@ try:
 
             idx1 = x + int(w / 2)
             idx3 = y + h
+	    top_offset = 15
+	    bottom_offset = -15
             if (idx3 >= h_max):
                 idx3 = h_max - 1
             if (idx1 >= w_max):
                 idx1 = w_max - 1
-            depth_top = depth_image[y, idx1] * depth_scale * 100
-            depth_bottom = depth_image[idx3, idx1] * depth_scale * 100
+            depth_top = depth_image[y + top_offset, idx1] * depth_scale * 100
+            depth_bottom = depth_image[idx3 + bottom_offset, idx1] * depth_scale * 100
 
             distance_true_top = depth_top * math.cos(alpha1 * (math.pi / 180))
             distance_true_bottom = depth_bottom * math.cos(alpha2 * (math.pi / 180))
@@ -140,7 +142,7 @@ try:
 
             cv2.putText(color_image, "Height: {:.2f} cm".format(height), (x + w, y + int(h / 2)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0))
 
-            cv2.putText(color_image, "Angle: {:.2f} deg".format(theta), (10, 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0))
+            cv2.putText(color_image, "Angle: {:.2f} deg".format(theta), (10, 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0))
 
             cv2.putText(color_image, "Depths (Top, Bot): ({:.2f}, {:.2f}) cm".format(depth_top, depth_bottom), (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 255))
             cv2.putText(color_image, "Alpha (1, 2): ({:.2f}, {:.2f}) deg".format(alpha1, alpha2), (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0))

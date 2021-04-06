@@ -62,7 +62,7 @@ try:
         red_mask = cv2.dilate(red_mask, kernel)
         res_red = cv2.bitwise_and(color_image, color_image, 
                                   mask = red_mask)
-        contours, hierarchy = cv2.findContours(red_mask,
+        _, contours, hierarchy = cv2.findContours(red_mask,
                                                cv2.RETR_TREE,
                                                cv2.CHAIN_APPROX_SIMPLE)
     
@@ -147,7 +147,7 @@ try:
             # cv2.putText(color_image, "D (Top, Bot): ({:.2f}, {:.2f}) cm".format(distance_true_top, distance_true_bottom), (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 255))
             print("Distance: {:.2f} cm".format(distance_true))
             print("Height: {:.2f} cm".format(height))
-            print("Angle: {:.2f} deg".format(angle))
+            print("Angle: {:.2f} deg".format(theta))
             print("Depths (Top, Bot): ({:.2f}, {:.2f}) cm".format(depth_top, depth_bottom))
             print("Alpha (1, 2): ({:.2f}, {:.2f}) deg".format(alpha1, alpha2))
             print("###################################")
