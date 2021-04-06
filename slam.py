@@ -1,5 +1,4 @@
-#!/usr/bin/env python 
-
+#!/usr/bin/python
 import numpy as np
 import math 
 import rospy
@@ -11,14 +10,14 @@ from geometry_msgs.msg import Point
 from geometry_msgs.msg import Quaternion
 
 def callback(data):
-    rospy.loginfo(data.data)
+	rospy.loginfo(data.data)
 
 def listener():
-    rospy.init_node('slam_listener', anonymous=True)
+	rospy.init_node('slam_listener', anonymous=True)
 
-    rospy.Subscriber('/rtabmap/odom/pose/pose')
+	rospy.Subscriber('/rtabmap/odom/pose/pose')
 
-    rospy.spin()
+	rospy.spin()
 
 if __name__ == '__main__':
-    listener()
+    	listener()
